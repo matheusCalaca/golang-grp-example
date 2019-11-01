@@ -1,0 +1,38 @@
+syntax = "proto3";
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+
+message User {
+    
+    int64 id = 1;
+    
+    string nome = 2;
+    
+    string sobrenome = 3;
+
+    google.protobuf.Timestamp reminder = 4;
+}
+
+// Request data to create new user task
+message CreateRequest{
+    
+    string api = 1;
+    
+    User user = 2;
+}
+
+// Response that contains data for created user task
+message CreateResponse{
+    
+    string api = 1;
+
+    int64 id = 2;
+}
+
+// Service to manage list of user tasks
+service UserService {
+    
+    rpc Create(CreateRequest) returns (CreateResponse);
+}
