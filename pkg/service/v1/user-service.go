@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
+	v1 "github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
 )
 
 const (
@@ -70,7 +70,7 @@ func (s *userServiceServer) Create(ctx context.Context, req *v1.CreateRequest) (
 
 	// insert User entity data
 	res, err := c.ExecContext(ctx, "INSERT INTO User(`nome`, `sobrenome`, `Reminder`) VALUES(?, ?, ?)",
-		req.User.nome, req.User.sobrenome, reminder)
+		req.User.Nome, req.User.Sobrenome, reminder)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "failed to insert into User-> "+err.Error())
 	}
@@ -120,7 +120,7 @@ func (s *userServiceServer) Read(ctx context.Context, req *v1.ReadRequest) (*v1.
 	// get User data
 	var td v1.User
 	var reminder time.Time
-	if err := rows.Scan(&td.Id, &td.nome, &td.sobrenome, &reminder); err != nil {
+	if err := rows.Scan(&td.Id, &td.Nome, &td.Sobrenome, &reminder); err != nil {
 		return nil, status.Error(codes.Unknown, "failed to retrieve field values from User row-> "+err.Error())
 	}
 	td.Reminder, err = ptypes.TimestampProto(reminder)
@@ -161,7 +161,7 @@ func (s *userServiceServer) Update(ctx context.Context, req *v1.UpdateRequest) (
 
 	// update User
 	res, err := c.ExecContext(ctx, "UPDATE User SET `nome`=?, `sobrenome`=?, `Reminder`=? WHERE `ID`=?",
-		req.User.nome, req.User.sobrenome, reminder, req.User.Id)
+		req.User.Nome, req.User.Sobrenome, reminder, req.User.Id)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "failed to update User-> "+err.Error())
 	}
@@ -243,7 +243,7 @@ func (s *userServiceServer) ReadAll(ctx context.Context, req *v1.ReadAllRequest)
 	list := []*v1.User{}
 	for rows.Next() {
 		td := new(v1.User)
-		if err := rows.Scan(&td.Id, &td.nome, &td.sobrenome, &reminder); err != nil {
+		if err := rows.Scan(&td.Id, &td.Nome, &td.Sobrenome, &reminder); err != nil {
 			return nil, status.Error(codes.Unknown, "failed to retrieve field values from User row-> "+err.Error())
 		}
 		td.Reminder, err = ptypes.TimestampProto(reminder)

@@ -10,7 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/matheusCalaca/golang-grp-example/pkg/protocol/grpc"
-	"github.com/matheusCalaca/golang-grp-example/pkg/service/v1"
+	v1 "github.com/matheusCalaca/golang-grp-example/pkg/service/v1"
 )
 
 // Config is configuration for Server
@@ -36,11 +36,11 @@ func RunServer() error {
 
 	// get configuration
 	var cfg Config
-	flag.StringVar(&cfg.GRPCPort, "grpc-port", "", "gRPC port to bind")
-	flag.StringVar(&cfg.DatastoreDBHost, "db-host", "", "Database host")
-	flag.StringVar(&cfg.DatastoreDBUser, "db-user", "", "Database user")
-	flag.StringVar(&cfg.DatastoreDBPassword, "db-password", "", "Database password")
-	flag.StringVar(&cfg.DatastoreDBSchema, "db-schema", "", "Database schema")
+	flag.StringVar(&cfg.GRPCPort, "grpc-port", "", "9090")
+	flag.StringVar(&cfg.DatastoreDBHost, "db-host", "", "localhost")
+	flag.StringVar(&cfg.DatastoreDBUser, "db-user", "", "root")
+	flag.StringVar(&cfg.DatastoreDBPassword, "db-password", "", "123")
+	flag.StringVar(&cfg.DatastoreDBSchema, "db-schema", "", "golang")
 	flag.Parse()
 
 	if len(cfg.GRPCPort) == 0 {
@@ -57,6 +57,7 @@ func RunServer() error {
 		cfg.DatastoreDBHost,
 		cfg.DatastoreDBSchema,
 		param)
+	fmt.Println(dsn)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %v", err)

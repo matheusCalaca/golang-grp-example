@@ -9,7 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc"
 
-	"github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
+	v1 "github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
 )
 
 const (
@@ -42,9 +42,9 @@ func main() {
 	req1 := v1.CreateRequest{
 		Api: apiVersion,
 		User: &v1.User{
-			nome:       "title (" + pfx + ")",
-			sobrenome: "description (" + pfx + ")",
-			Reminder:    reminder,
+			Nome:      "title (" + pfx + ")",
+			Sobrenome: "description (" + pfx + ")",
+			Reminder:  reminder,
 		},
 	}
 	res1, err := c.Create(ctx, &req1)
@@ -70,10 +70,10 @@ func main() {
 	req3 := v1.UpdateRequest{
 		Api: apiVersion,
 		User: &v1.User{
-			Id:          res2.User.Id,
-			nome:       res2.User.nome,
-			sobrenome: res2.User.sobrenome + " + updated",
-			Reminder:    res2.User.Reminder,
+			Id:        res2.User.Id,
+			Nome:      res2.User.Nome,
+			Sobrenome: res2.User.Sobrenome + " + updated",
+			Reminder:  res2.User.Reminder,
 		},
 	}
 	res3, err := c.Update(ctx, &req3)
