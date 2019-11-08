@@ -9,9 +9,8 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
+	v1 "github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
-
-	"github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
 )
 
 func Test_userServiceServer_Create(t *testing.T) {
@@ -45,9 +44,9 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &v1.CreateRequest{
 					Api: "v1",
 					User: &v1.User{
-						nome:       "nome",
-						sobrenome: "sobrenome",
-						Reminder:    reminder,
+						Nome:      "nome",
+						Sobrenome: "sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -68,8 +67,8 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &v1.CreateRequest{
 					Api: "v1000",
 					User: &v1.User{
-						nome:       "nome",
-						sobrenome: "sobrenome",
+						Nome:      "nome",
+						Sobrenome: "sobrenome",
 						Reminder: &timestamp.Timestamp{
 							Seconds: 1,
 							Nanos:   -1,
@@ -88,8 +87,8 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &v1.CreateRequest{
 					Api: "v1",
 					User: &v1.User{
-						nome:       "nome",
-						sobrenome: "sobrenome",
+						Nome:      "nome",
+						Sobrenome: "sobrenome",
 						Reminder: &timestamp.Timestamp{
 							Seconds: 1,
 							Nanos:   -1,
@@ -108,9 +107,9 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &v1.CreateRequest{
 					Api: "v1",
 					User: &v1.User{
-						nome:       "nome",
-						sobrenome: "sobrenome",
-						Reminder:    reminder,
+						Nome:      "nome",
+						Sobrenome: "sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -128,9 +127,9 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &v1.CreateRequest{
 					Api: "v1",
 					User: &v1.User{
-						nome:       "nome",
-						sobrenome: "sobrenome",
-						Reminder:    reminder,
+						Nome:      "nome",
+						Sobrenome: "sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -197,10 +196,10 @@ func Test_userServiceServer_Read(t *testing.T) {
 			want: &v1.ReadResponse{
 				Api: "v1",
 				User: &v1.User{
-					Id:          1,
-					nome:       "nome",
-					sobrenome: "sobrenome",
-					Reminder:    reminder,
+					Id:        1,
+					Nome:      "nome",
+					Sobrenome: "sobrenome",
+					Reminder:  reminder,
 				},
 			},
 		},
@@ -297,10 +296,10 @@ func Test_userServiceServer_Update(t *testing.T) {
 				req: &v1.UpdateRequest{
 					Api: "v1",
 					User: &v1.User{
-						Id:          1,
-						nome:       "new nome",
-						sobrenome: "new sobrenome",
-						Reminder:    reminder,
+						Id:        1,
+						Nome:      "new nome",
+						Sobrenome: "new sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -321,10 +320,10 @@ func Test_userServiceServer_Update(t *testing.T) {
 				req: &v1.UpdateRequest{
 					Api: "v1",
 					User: &v1.User{
-						Id:          1,
-						nome:       "new nome",
-						sobrenome: "new sobrenome",
-						Reminder:    reminder,
+						Id:        1,
+						Nome:      "new nome",
+						Sobrenome: "new sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -339,9 +338,9 @@ func Test_userServiceServer_Update(t *testing.T) {
 				req: &v1.UpdateRequest{
 					Api: "v1",
 					User: &v1.User{
-						Id:          1,
-						nome:       "new nome",
-						sobrenome: "new sobrenome",
+						Id:        1,
+						Nome:      "new nome",
+						Sobrenome: "new sobrenome",
 						Reminder: &timestamp.Timestamp{
 							Seconds: 1,
 							Nanos:   -1,
@@ -360,10 +359,10 @@ func Test_userServiceServer_Update(t *testing.T) {
 				req: &v1.UpdateRequest{
 					Api: "v1",
 					User: &v1.User{
-						Id:          1,
-						nome:       "new nome",
-						sobrenome: "new sobrenome",
-						Reminder:    reminder,
+						Id:        1,
+						Nome:      "new nome",
+						Sobrenome: "new sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -381,10 +380,10 @@ func Test_userServiceServer_Update(t *testing.T) {
 				req: &v1.UpdateRequest{
 					Api: "v1",
 					User: &v1.User{
-						Id:          1,
-						nome:       "new nome",
-						sobrenome: "new sobrenome",
-						Reminder:    reminder,
+						Id:        1,
+						Nome:      "new nome",
+						Sobrenome: "new sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -402,10 +401,10 @@ func Test_userServiceServer_Update(t *testing.T) {
 				req: &v1.UpdateRequest{
 					Api: "v1",
 					User: &v1.User{
-						Id:          1,
-						nome:       "new nome",
-						sobrenome: "new sobrenome",
-						Reminder:    reminder,
+						Id:        1,
+						Nome:      "new nome",
+						Sobrenome: "new sobrenome",
+						Reminder:  reminder,
 					},
 				},
 			},
@@ -592,16 +591,16 @@ func Test_userServiceServer_ReadAll(t *testing.T) {
 				Api: "v1",
 				Users: []*v1.User{
 					{
-						Id:          1,
-						nome:       "nome 1",
-						sobrenome: "sobrenome 1",
-						Reminder:    reminder1,
+						Id:        1,
+						Nome:      "nome 1",
+						Sobrenome: "sobrenome 1",
+						Reminder:  reminder1,
 					},
 					{
-						Id:          2,
-						nome:       "nome 2",
-						sobrenome: "sobrenome 2",
-						Reminder:    reminder2,
+						Id:        2,
+						Nome:      "nome 2",
+						Sobrenome: "sobrenome 2",
+						Reminder:  reminder2,
 					},
 				},
 			},
