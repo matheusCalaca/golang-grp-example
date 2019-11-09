@@ -1,5 +1,5 @@
 // start server cmd/server -> go build .
-server.exe -grpc-port=9090 -db-host=127.0.0.1:3306 -db-user=calaca -db-password=123 -db-schema=golang
+server.exe -grpc-port=9090 -http-port=8080 -db-host=127.0.0.1:3306 -db-user=calaca -db-password=123 -db-schema=golang
 
 // start server cmd/r -> go build .
 client-grpc.exe -server=localhost:9090
