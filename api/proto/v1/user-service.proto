@@ -1,0 +1,121 @@
+syntax = "proto3";
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+
+message User {
+    
+    int64 id = 1;
+    
+    string nome = 2;
+    
+    string sobrenome = 3;
+
+    google.protobuf.Timestamp reminder = 4;
+}
+
+// Request data to create new user task
+message CreateRequest{
+    
+    string api = 1;
+    
+    User user = 2;
+}
+
+// Response that contains data for created user task
+message CreateResponse{
+    
+    string api = 1;
+
+    int64 id = 2;
+}
+
+// Request data to read  user task
+message ReadRequest{
+    
+    string api = 1;
+
+    
+    int64 id = 2;
+}
+
+// Contains  user task data specified in by ID request
+message ReadResponse{
+     
+    string api = 1;
+
+    // Task entity read by ID
+    User user = 2;
+}
+
+// Request data to update  user task
+message UpdateRequest{
+     
+    string api = 1;
+
+    // Task entity to update
+    User user = 2;
+}
+
+// Contains status of update operation
+message UpdateResponse{
+     
+    string api = 1;
+
+    // Contains number of entities have beed updated
+    // Equals 1 in case of succesfull update
+    int64 updated = 2;
+}
+
+// Request data to delete  user task
+message DeleteRequest{
+     
+    string api = 1;
+
+    // Unique integer identifier of the  user task to delete
+    int64 id = 2;
+}
+
+// Contains status of delete operation
+message DeleteResponse{
+     
+    string api = 1;
+
+    // Contains number of entities have beed deleted
+    // Equals 1 in case of succesfull delete
+    int64 deleted = 2;
+}
+
+// Request data to read all  user task
+message ReadAllRequest{
+     
+    string api = 1;
+}
+
+// Contains list of all  user tasks
+message ReadAllResponse{
+     
+    string api = 1;
+
+    // List of all  user tasks
+    repeated User users = 2;
+}
+
+// Service to manage list of  user tasks
+service UserService {
+    // Create new  user task
+    rpc Create(CreateRequest) returns (CreateResponse);
+
+    // Read  user task
+    rpc Read(ReadRequest) returns (ReadResponse);
+
+    // Update  user task
+    rpc Update(UpdateRequest) returns (UpdateResponse);
+
+    // Delete  user task
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+
+    // Read all  user tasks
+    rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+}
