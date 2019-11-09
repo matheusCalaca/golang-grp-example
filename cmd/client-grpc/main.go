@@ -42,8 +42,8 @@ func main() {
 	req1 := v1.CreateRequest{
 		Api: apiVersion,
 		User: &v1.User{
-			Nome:      "title (" + pfx + ")",
-			Sobrenome: "description (" + pfx + ")",
+			Nome:      "nome (" + pfx + ")",
+			Sobrenome: "sobrenome (" + pfx + ")",
 			Reminder:  reminder,
 		},
 	}

@@ -49,7 +49,7 @@ func (s *userServiceServer) connect(ctx context.Context) (*sql.Conn, error) {
 	return c, nil
 }
 
-// Create new todo task
+// Create new User task
 func (s *userServiceServer) Create(ctx context.Context, req *v1.CreateRequest) (*v1.CreateResponse, error) {
 	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
@@ -87,7 +87,7 @@ func (s *userServiceServer) Create(ctx context.Context, req *v1.CreateRequest) (
 	}, nil
 }
 
-// Read todo task
+// Read User task
 func (s *userServiceServer) Read(ctx context.Context, req *v1.ReadRequest) (*v1.ReadResponse, error) {
 	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
@@ -140,7 +140,7 @@ func (s *userServiceServer) Read(ctx context.Context, req *v1.ReadRequest) (*v1.
 
 }
 
-// Update todo task
+// Update User task
 func (s *userServiceServer) Update(ctx context.Context, req *v1.UpdateRequest) (*v1.UpdateResponse, error) {
 	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
@@ -182,7 +182,7 @@ func (s *userServiceServer) Update(ctx context.Context, req *v1.UpdateRequest) (
 	}, nil
 }
 
-// Delete todo task
+// Delete User task
 func (s *userServiceServer) Delete(ctx context.Context, req *v1.DeleteRequest) (*v1.DeleteResponse, error) {
 	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
@@ -218,7 +218,7 @@ func (s *userServiceServer) Delete(ctx context.Context, req *v1.DeleteRequest) (
 	}, nil
 }
 
-// Read all todo tasks
+// Read all User tasks
 func (s *userServiceServer) ReadAll(ctx context.Context, req *v1.ReadAllRequest) (*v1.ReadAllResponse, error) {
 	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {

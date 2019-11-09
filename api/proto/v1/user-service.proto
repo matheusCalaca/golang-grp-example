@@ -2,56 +2,89 @@ syntax = "proto3";
 package v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
 
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "User service";
+		version: "1.0";
+		contact: {
+			name: "go-grpc-http-rest-microservice-tutorial project";
+			url: "https://github.com/amsokol/go-grpc-http-rest-microservice-tutorial";
+			email: "medium@amsokol.com";
+        };
+    };
+    schemes: HTTP;
+    consumes: "application/json";
+    produces: "application/json";
+    responses: {
+		key: "404";
+		value: {
+			description: "Returned when the resource does not exist.";
+			schema: {
+				json_schema: {
+					type: STRING;
+				}
+			}
+		}
+	}
+};
 
+// Task we have to do
 message User {
-    
+    // Unique integer identifier of the user task
     int64 id = 1;
-    
+
+    // Nome of the task
     string nome = 2;
-    
+
+    // Detail sobrenome of the user task
     string sobrenome = 3;
 
+    // Date and time to remind the user task
     google.protobuf.Timestamp reminder = 4;
 }
 
 // Request data to create new user task
 message CreateRequest{
-    
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
-    
+
+    // Task entity to add
     User user = 2;
 }
 
-// Response that contains data for created user task
+// Contains data of created user task
 message CreateResponse{
-    
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
+    // ID of created task
     int64 id = 2;
 }
 
-// Request data to read  user task
+// Request data to read user task
 message ReadRequest{
-    
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
-    
+    // Unique integer identifier of the user task
     int64 id = 2;
 }
 
-// Contains  user task data specified in by ID request
+// Contains user task data specified in by ID request
 message ReadResponse{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
     // Task entity read by ID
     User user = 2;
 }
 
-// Request data to update  user task
+// Request data to update user task
 message UpdateRequest{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
     // Task entity to update
@@ -60,7 +93,7 @@ message UpdateRequest{
 
 // Contains status of update operation
 message UpdateResponse{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
     // Contains number of entities have beed updated
@@ -68,18 +101,18 @@ message UpdateResponse{
     int64 updated = 2;
 }
 
-// Request data to delete  user task
+// Request data to delete user task
 message DeleteRequest{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
-    // Unique integer identifier of the  user task to delete
+    // Unique integer identifier of the user task to delete
     int64 id = 2;
 }
 
 // Contains status of delete operation
 message DeleteResponse{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
     // Contains number of entities have beed deleted
@@ -87,35 +120,62 @@ message DeleteResponse{
     int64 deleted = 2;
 }
 
-// Request data to read all  user task
+// Request data to read all user task
 message ReadAllRequest{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 }
 
-// Contains list of all  user tasks
+// Contains list of all user tasks
 message ReadAllResponse{
-     
+    // API versioning: it is my best practice to specify version explicitly
     string api = 1;
 
-    // List of all  user tasks
+    // List of all user tasks
     repeated User users = 2;
 }
 
-// Service to manage list of  user tasks
+// Service to manage list of user tasks
 service UserService {
-    // Create new  user task
-    rpc Create(CreateRequest) returns (CreateResponse);
+    // Read all user tasks
+    rpc ReadAll(ReadAllRequest) returns (ReadAllResponse){
+        option (google.api.http) = {
+            get: "/v1/user/all"
+        };
+    }
 
-    // Read  user task
-    rpc Read(ReadRequest) returns (ReadResponse);
+    // Create new user task
+    rpc Create(CreateRequest) returns (CreateResponse){
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    }
 
-    // Update  user task
-    rpc Update(UpdateRequest) returns (UpdateResponse);
+    // Read user task
+    rpc Read(ReadRequest) returns (ReadResponse){
+        option (google.api.http) = {
+            get: "/v1/user/{id}"
+        };
+    }
 
-    // Delete  user task
-    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    // Update user task
+    rpc Update(UpdateRequest) returns (UpdateResponse){
+        option (google.api.http) = {
+            put: "/v1/user/{user.id}"
+            body: "*"
 
-    // Read all  user tasks
-    rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+            additional_bindings {
+                patch: "/v1/user/{user.id}"
+                body: "*"
+            }
+        };
+    }
+
+    // Delete user task
+    rpc Delete(DeleteRequest) returns (DeleteResponse){
+        option (google.api.http) = {
+            delete: "/v1/user/{id}"
+        };
+    }
 }
