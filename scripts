@@ -1,0 +1,15 @@
+// start server cmd/server -> go build .
+server.exe -grpc-port=9090 -db-host=127.0.0.1:3306 -db-user=calaca -db-password=123 -db-schema=golang
+
+// start server cmd/r -> go build .
+client-grpc.exe -server=localhost:9090
+
+// create table
+CREATE TABLE `User` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(200) DEFAULT NULL,
+  `sobrenome` varchar(1024) DEFAULT NULL,
+  `Reminder` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`)
+);
