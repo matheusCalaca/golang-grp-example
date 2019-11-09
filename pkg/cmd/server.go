@@ -10,6 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/matheusCalaca/golang-grp-example/pkg/protocol/grpc"
+	"github.com/matheusCalaca/golang-grp-example/pkg/protocol/rest"
 	v1 "github.com/matheusCalaca/golang-grp-example/pkg/service/v1"
 )
 
@@ -18,6 +19,10 @@ type Config struct {
 	// gRPC server start parameters section
 	// gRPC is TCP port to listen by gRPC server
 	GRPCPort string
+
+	// HTTP/REST gateway start parameters section
+	// HTTPPort is TCP port to listen by HTTP/REST gateway
+	HTTPPort string
 
 	// DB Datastore parameters section
 	// DatastoreDBHost is host of database
@@ -36,15 +41,20 @@ func RunServer() error {
 
 	// get configuration
 	var cfg Config
-	flag.StringVar(&cfg.GRPCPort, "grpc-port", "", "9090")
-	flag.StringVar(&cfg.DatastoreDBHost, "db-host", "", "localhost")
-	flag.StringVar(&cfg.DatastoreDBUser, "db-user", "", "root")
-	flag.StringVar(&cfg.DatastoreDBPassword, "db-password", "", "123")
-	flag.StringVar(&cfg.DatastoreDBSchema, "db-schema", "", "golang")
+	flag.StringVar(&cfg.GRPCPort, "grpc-port", "", "port")
+	flag.StringVar(&cfg.HTTPPort, "http-port", "", "HTTP port to bind")
+	flag.StringVar(&cfg.DatastoreDBHost, "db-host", "", "host")
+	flag.StringVar(&cfg.DatastoreDBUser, "db-user", "", "user")
+	flag.StringVar(&cfg.DatastoreDBPassword, "db-password", "", "senha")
+	flag.StringVar(&cfg.DatastoreDBSchema, "db-schema", "", "schema")
 	flag.Parse()
 
 	if len(cfg.GRPCPort) == 0 {
 		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
+	}
+
+	if len(cfg.HTTPPort) == 0 {
+		return fmt.Errorf("invalid TCP port for HTTP gateway: '%s'", cfg.HTTPPort)
 	}
 
 	// add MySQL driver specific parameter to parse date/time
@@ -65,6 +75,11 @@ func RunServer() error {
 	defer db.Close()
 
 	v1API := v1.NewUserServiceServer(db)
+
+	// run HTTP gateway
+	go func() {
+		_ = rest.RunServer(ctx, cfg.GRPCPort, cfg.HTTPPort)
+	}()
 
 	return grpc.RunServer(ctx, v1API, cfg.GRPCPort)
 }
