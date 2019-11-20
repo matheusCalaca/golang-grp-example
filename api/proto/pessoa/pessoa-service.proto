@@ -78,13 +78,13 @@ message Pessoa {
 
 // Requisicao para criar uma nova pessoa
 message CrearPessoaRequest{
-    
-    Pessoa pessoa = 1;
+    string api = 1;
+    Pessoa pessoa = 2;
 }
 
 // Resposta com ID da pessoa Criada
 message CrearPessoaResponse{
-    
+    string api = 1;
     int64 id = 2;
 }
 

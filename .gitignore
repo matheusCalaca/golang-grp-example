@@ -2,3 +2,8 @@ vendor
 .vscode
 
 *.exe
+.idea
+.idea
+*.iml
+# Default ignored files
+/workspace.xml
