@@ -15,12 +15,10 @@ const (
 	apiVersion = "pessoa"
 )
 
-// PessoaServiceService implementação de pessoa.PessoaServiceSerce interface proto
+// pessoaServiceService implementação de pessoa.PessoaServiceServer interface proto
 type pessoaServiceService struct {
 	db *sql.DB
 }
-
-
 
 //// NewPessoaServiceServer Cria o servidor para pessoa
 func NewPessoaServiceServer(db *sql.DB) pessoa.PessoaServiceServer {
@@ -49,7 +47,7 @@ func (s *pessoaServiceService) connect(ctx context.Context) (*sql.Conn, error) {
 }
 
 // Create nova pessoa
-func (s *pessoaServiceService) Create(ctx context.Context, req *pessoa.CrearPessoaRequest) (*pessoa.CrearPessoaResponse, error) {
+func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CrearPessoaRequest) (*pessoa.CrearPessoaResponse, error) {
 	// check verifica se a versão da api do cliente e suportada pelo o servidor
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
