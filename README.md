@@ -16,4 +16,14 @@ de consulta. posteriormente pretendo escrever um artigo explicando tudo
 
 (EM CONSTRUÇÃO .............)
 
+###Start
+1 -  fazer o build do server  
+- acessar a pasta "cmd/server" 
+- `cd cmd/server`
+2 - Start o server
+- iniciar o servicor co o seguinte comando
+- `server.exe -grpc-port={PORTA DO SERVIDOR GRPC} -db-host={HOST DO BD : PORTA} -db-user={USER BD} -db-password={SENHA BD} -db-schema={SCHEMA BD}`
+- substituir os {} pelo valor real dentro tem uma descrição do campo
+
+
 ###Bibliografia
