@@ -1,0 +1,19 @@
+#EXAMPLE GO GRPC
+
+##IDEIA
+<br/>
+A ideia deste projeto e ter um exemplo de inclusão de pessoa utilizando o protocolo RPC e a 
+lib [gRPC] 
+(https://grpc.io/) da google. junto fazer um mutiplexador para receber requisiçoes em HTTP tambem.
+
+##OBJETIVO
+<br/>
+O objetivo deste e estudar e aprender a linguagem o Go e o gRPC. para projetos fulturos.
+
+##TUTORIAL
+Estou escrevendo um tutorial de como foi criado a aplicação, para ficar registrado como base 
+de consulta. posteriormente pretendo escrever um artigo explicando tudo
+
+(EM CONSTRUÇÃO .............)
+
+###Bibliografia
