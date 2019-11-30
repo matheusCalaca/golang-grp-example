@@ -4,9 +4,7 @@ import (
 	"context"
 	"flag"
 	"github.com/golang/protobuf/ptypes"
-	v1 "github.com/matheusCalaca/golang-grp-example/pkg/api/v1"
 	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
-	"google.golang.org/genproto/googleapis/ads/googleads/v1/enums"
 	"google.golang.org/grpc"
 	"log"
 	"time"
@@ -16,7 +14,6 @@ const (
 	// apiVersion is version of API is provided by server
 	apiVersion = "pessoa"
 )
-
 
 func main() {
 	// obter as configurações
@@ -47,10 +44,10 @@ func main() {
 	req1 := pessoa.CrearPessoaRequest{
 		Api: apiVersion,
 		Pessoa: &pessoa.Pessoa{
-			Nome:"Matheus Calaça",
+			Nome:         "Matheus Calaça",
 			DtNascimento: date.UnixNano(),
-			Email: "matheusfcalaca@gmail.com",
-			Reminder:    reminder,
+			Email:        "matheusfcalaca@gmail.com",
+			Reminder:     reminder,
 		},
 	}
 	res1, err := c.Criar(ctx, &req1)
@@ -58,6 +55,5 @@ func main() {
 		log.Fatalf("Falha ao criar uma pessoa: %v", err)
 	}
 	log.Printf("Pessoa Criada: <%+v>\n\n", res1)
-
 
 }
