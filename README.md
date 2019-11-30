@@ -16,13 +16,31 @@ de consulta. posteriormente pretendo escrever um artigo explicando tudo
 
 (EM CONSTRUÇÃO .............)
 
-###Start
+###Start Server
 1 -  fazer o build do server  
 - acessar a pasta "cmd/server" 
 - `cd cmd/server`
-2 - Start o server
+- fazer o build
+- `go build .`
+<br>
+<br>
+2 -  Start o server
 - iniciar o servicor co o seguinte comando
 - `server.exe -grpc-port={PORTA DO SERVIDOR GRPC} -db-host={HOST DO BD : PORTA} -db-user={USER BD} -db-password={SENHA BD} -db-schema={SCHEMA BD}`
+- substituir os {} pelo valor real dentro tem uma descrição do campo
+
+###Start Cliente
+
+1 -  fazer o build do server  
+- acessar a pasta "cmd/client-grpc" 
+- `cd cmd/client-grpc`
+- fazer o build
+- `go build .`
+<br>
+<br>
+2 -  Start o Cliente
+- iniciar o servicor co o seguinte comando
+- `client-grpc.exe -server=localhost:{PORTA DO SERVIDOR GRPC}`
 - substituir os {} pelo valor real dentro tem uma descrição do campo
 
 
