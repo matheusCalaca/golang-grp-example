@@ -3,6 +3,7 @@ package pessoa
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
 	"google.golang.org/grpc/codes"
@@ -64,11 +65,14 @@ func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CrearPesso
 		return nil, status.Error(codes.InvalidArgument, "reminder campo com o formato invalido -> "+err.Error())
 	}
 
-	//time.Unix(0, req.Pessoa.DtNascimento)
+	dtNascimento, err := ptypes.Timestamp(req.Pessoa.DtNascimento)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Data de Nascimento Formato invalido -> "+err.Error())
+	}
 
 	// insert no bd os dados da pessoa
-	res, err := c.ExecContext(ctx, "INSERT INTO pessoa (`NOME`,	`EMAIL`, `REMIDER`)	VALUES	(?,	?,  ?	)",
-		req.Pessoa.Nome, req.Pessoa.Email, reminder)
+	res, err := c.ExecContext(ctx, "INSERT INTO pessoa (`NOME`,	`DATA_NASCIMENTO`, `EMAIL`, `REMIDER`)	VALUES	(?,	?,  ?, ? )",
+		req.Pessoa.Nome, dtNascimento, req.Pessoa.Email, reminder)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "Falha ao inserir pessoa no banco de dados-> "+err.Error())
 	}

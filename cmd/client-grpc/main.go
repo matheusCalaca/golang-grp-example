@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
+	"github.com/matheusCalaca/golanggrpexample/pkg/util"
 	"google.golang.org/grpc"
 	"log"
 	"time"
@@ -38,18 +40,23 @@ func main() {
 
 	// format RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
 	//pfx := t.Format(time.RFC3339Nano)
-	date, _ := time.Parse("2006-01-02", "1995-08-27")
+	dataNascimento, err := util.DataBRtoProtoBuffDate("27-08-1995")
+	if err != nil {
+		panic(err)
+	}
 
 	// crira uma pessoa
 	req1 := pessoa.CrearPessoaRequest{
 		Api: apiVersion,
 		Pessoa: &pessoa.Pessoa{
-			Nome:         "Matheus Calaça",
-			DtNascimento: date.UnixNano(),
+			Nome:         "Matheus Calaça 2",
+			DtNascimento: dataNascimento,
 			Email:        "matheusfcalaca@gmail.com",
 			Reminder:     reminder,
 		},
 	}
+
+	fmt.Println(req1)
 	res1, err := c.Criar(ctx, &req1)
 	if err != nil {
 		log.Fatalf("Falha ao criar uma pessoa: %v", err)
