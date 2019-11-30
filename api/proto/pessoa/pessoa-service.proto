@@ -61,7 +61,7 @@ message Pessoa {
 
     string nome = 2;
 
-    int64 dtNascimento = 3;
+    google.protobuf.Timestamp dtNascimento = 3;
     
     repeated Identificador identificador =  4;
 
