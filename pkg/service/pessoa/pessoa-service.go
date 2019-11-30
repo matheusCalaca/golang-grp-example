@@ -3,7 +3,6 @@ package pessoa
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
 	"google.golang.org/grpc/codes"
