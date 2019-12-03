@@ -76,7 +76,7 @@ func clientePessoa(conn *grpc.ClientConn, reminder *timestamp.Timestamp, err err
 		panic(err)
 	}
 	// criar uma pessoa
-	req1 := pessoa.CrearPessoaRequest{
+	req1 := pessoa.CriarPessoaRequest{
 		Api: apiVersion,
 		Pessoa: &pessoa.Pessoa{
 			Nome:         "Matheus Calaça 2",

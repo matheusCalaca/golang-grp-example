@@ -24,7 +24,6 @@ func Test_userServiceServer_Create(t *testing.T) {
 	s := pessoa.NewPessoaServiceServer(db)
 	fmt.Printf(s)
 
-
 	tm := time.Now().In(time.UTC)
 	reminder, _ := ptypes.TimestampProto(tm)
 
@@ -37,7 +36,7 @@ func Test_userServiceServer_Create(t *testing.T) {
 		s       pessoa.PessoaServiceServer
 		args    args
 		mock    func()
-		want    *pessoa.CrearPessoaResponse
+		want    *pessoa.CriarPessoaResponse
 		wantErr bool
 	}{
 		{
@@ -48,9 +47,9 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &pessoa.CrearPessoaRequest{
 					Api: "pessoa",
 					Pessoa: &pessoa.Pessoa{
-						Nome:      "nome",
-						Email: "nome@gmail.com",
-						Reminder:  reminder,
+						Nome:     "nome",
+						Email:    "nome@gmail.com",
+						Reminder: reminder,
 					},
 				},
 			},
@@ -58,7 +57,7 @@ func Test_userServiceServer_Create(t *testing.T) {
 				mock.ExpectExec("INSERT INTO pessoa").WithArgs("nome", "email", tm).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
-			want: &pessoa.CrearPessoaResponse{
+			want: &pessoa.CriarPessoaResponse{
 				Api: "pessoa",
 				Id:  1,
 			},
@@ -71,7 +70,7 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &pessoa.CrearPessoaRequest{
 					Api: "pessoa000",
 					Pessoa: &pessoa.Pessoa{
-						Nome:      "nome",
+						Nome:  "nome",
 						Email: "nome@gmail.com",
 						Reminder: &timestamp.Timestamp{
 							Seconds: 1,
@@ -91,7 +90,7 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &pessoa.CrearPessoaRequest{
 					Api: "pessoa",
 					Pessoa: &pessoa.Pessoa{
-						Nome:      "nome",
+						Nome:  "nome",
 						Email: "sobrenome",
 						Reminder: &timestamp.Timestamp{
 							Seconds: 1,
@@ -111,9 +110,9 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &pessoa.CrearPessoaRequest{
 					Api: "pessoa",
 					Pessoa: &pessoa.Pessoa{
-						Nome:      "nome",
-						Email: "sobrenome",
-						Reminder:  reminder,
+						Nome:     "nome",
+						Email:    "sobrenome",
+						Reminder: reminder,
 					},
 				},
 			},
@@ -131,9 +130,9 @@ func Test_userServiceServer_Create(t *testing.T) {
 				req: &pessoa.CrearPessoaRequest{
 					Api: "pessoa",
 					Pessoa: &pessoa.Pessoa{
-						Nome:      "nome",
-						Email: "sobrenome",
-						Reminder:  reminder,
+						Nome:     "nome",
+						Email:    "sobrenome",
+						Reminder: reminder,
 					},
 				},
 			},

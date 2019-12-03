@@ -46,7 +46,7 @@ func (s *pessoaServiceService) connect(ctx context.Context) (*sql.Conn, error) {
 }
 
 // Create nova pessoa
-func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CrearPessoaRequest) (*pessoa.CrearPessoaResponse, error) {
+func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CriarPessoaRequest) (*pessoa.CriarPessoaResponse, error) {
 	// check verifica se a versão da api do cliente e suportada pelo o servidor
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CrearPesso
 		return nil, status.Error(codes.Unknown, "falha ao trazer o ultimo id-> "+err.Error())
 	}
 
-	return &pessoa.CrearPessoaResponse{
+	return &pessoa.CriarPessoaResponse{
 		Api: apiVersion,
 		Id:  id,
 	}, nil
