@@ -58,7 +58,7 @@ func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context) {
 		},
 	}
 	fmt.Println(reqEndereco)
-	responseEndereco, err := clientEndereco.Criar(ctx, &reqEndereco)
+	responseEndereco, err := clientEndereco.CriarEndereco(ctx, &reqEndereco)
 	if err != nil {
 		log.Fatalf("falha ao criar enderreço %v", err)
 	}
