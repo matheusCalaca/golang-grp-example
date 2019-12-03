@@ -29,7 +29,7 @@ type Config struct {
 	DatastoreDBSchema string
 }
 
-// RunServer ginicia server GRPC e HTTP gatwarey
+// RunServer gerenciar server GRPC e HTTP gatwarey
 func RunServer() error {
 	ctx := context.Background()
 
@@ -47,7 +47,7 @@ func RunServer() error {
 		return fmt.Errorf("Porta invalisa para o gRPC: '%s'", cfg.GRPCPort)
 	}
 
-	// Especifica o parametro da data para o MYSQL
+	// Especifica o parametros da data para o MYSQL
 	param := "parseTime=true"
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?%s",
@@ -63,6 +63,7 @@ func RunServer() error {
 	defer db.Close()
 
 	PessoaAPI := pessoa.NewPessoaServiceServer(db)
+	EnderecoAPI := pessoa.NewEnderecoServiceServer(db)
 
-	return grpc.RunServer(ctx, PessoaAPI, cfg.GRPCPort)
+	return grpc.RunServer(ctx, cfg.GRPCPort, PessoaAPI, EnderecoAPI)
 }

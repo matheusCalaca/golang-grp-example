@@ -12,7 +12,7 @@ import (
 )
 
 // RunServer inicia um servidor gRPC
-func RunServer(ctx context.Context, PessoaAPI pessoa.PessoaServiceServer, port string) error {
+func RunServer(ctx context.Context, port string, PessoaAPI pessoa.PessoaServiceServer, EnderecoApi pessoa.EnderecoServiceServer) error {
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		return err
@@ -22,13 +22,15 @@ func RunServer(ctx context.Context, PessoaAPI pessoa.PessoaServiceServer, port s
 	server := grpc.NewServer()
 	pessoa.RegisterPessoaServiceServer(server, PessoaAPI)
 
+	pessoa.RegisterEnderecoServiceServer(server, EnderecoApi)
+
 	// graceful shutdown
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	go func() {
 		for range c {
 			// sig is a ^C, handle it
-			log.Println("shutting down gRPC server...")
+			log.Println("Desligado  gRPC server...")
 
 			server.GracefulStop()
 
@@ -37,6 +39,6 @@ func RunServer(ctx context.Context, PessoaAPI pessoa.PessoaServiceServer, port s
 	}()
 
 	// start gRPC server
-	log.Println("starting gRPC server...")
+	log.Println("iniciado  gRPC server...")
 	return server.Serve(listen)
 }
