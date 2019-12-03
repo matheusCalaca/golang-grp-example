@@ -21,8 +21,6 @@ message Endereco {
 
     string uf = 7;
 
-    google.protobuf.Timestamp reminder = 8;
-
 }
 
 
@@ -100,7 +98,7 @@ service PessoaService {
 
 
 
-// Requisicao para criar uma nova pessoa
+// Requisito para criar uma nova pessoa
 message CriarEnderecoRequest{
     string api = 1;
     Endereco endereco = 2;

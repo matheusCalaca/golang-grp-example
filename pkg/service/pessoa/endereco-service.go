@@ -32,8 +32,8 @@ func (service *enderecoServiceService) Criar(ctx context.Context, req *pessoa.Cr
 		return nil, err
 	}
 
-	result, err := conn.ExecContext(ctx, "insert into endereco(CEP, LOGRADOURO, COMPLEMENTO, BAIRRO, CIDADE, UF, REMIDER) values (?,?,?,?,?,?,?)",
-		req.Endereco.Cep, req.Endereco.Logradouro, req.Endereco.Complemento, req.Endereco.Bairro, req.Endereco.Cidade, req.Endereco.Uf, req.Endereco.Reminder)
+	result, err := conn.ExecContext(ctx, "insert into endereco(CEP, LOGRADOURO, COMPLEMENTO, BAIRRO, CIDADE, UF) values (?,?,?,?,?,?)",
+		req.Endereco.Cep, req.Endereco.Logradouro, req.Endereco.Complemento, req.Endereco.Bairro, req.Endereco.Cidade, req.Endereco.Uf)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "Falha ao inserir endereço no banco de dados -> "+err.Error())
 	}
