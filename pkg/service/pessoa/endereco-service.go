@@ -24,7 +24,7 @@ func (service *enderecoServiceService) connect(ctx context.Context) (*sql.Conn, 
 	return con, nil
 }
 
-func (service *enderecoServiceService) Criar(ctx context.Context, req *pessoa.CriarEnderecoRequest) (*pessoa.CriarEnderecoResponse, error) {
+func (service *enderecoServiceService) CriarEndereco(ctx context.Context, req *pessoa.CriarEnderecoRequest) (*pessoa.CriarEnderecoResponse, error) {
 
 	//abrir conexão
 	conn, err := service.connect(ctx)

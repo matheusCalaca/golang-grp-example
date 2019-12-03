@@ -1,0 +1,43 @@
+syntax = "proto3";
+package pessoa;
+
+//Objeto Endereço
+message Endereco {
+
+    int64 id =  1;
+
+    int64 cep =  2;
+
+    string logradouro = 3;
+
+    string complemento = 4;
+
+    string bairro = 5;
+
+    string cidade = 6;
+
+    string uf = 7;
+
+}
+
+
+// Requisito para criar uma nova pessoa
+message CriarEnderecoRequest{
+    string api = 1;
+    Endereco endereco = 2;
+}
+
+// Resposta com ID da pessoa Criada
+message CriarEnderecoResponse{
+    string api = 1;
+    int64 id = 2;
+}
+
+
+
+// serviço de pessoa RPC
+service EnderecoService {
+
+    // criar endereco
+    rpc CriarEndereco (CriarEnderecoRequest) returns (CriarEnderecoResponse);
+}

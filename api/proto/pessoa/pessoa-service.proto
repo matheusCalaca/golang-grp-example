@@ -2,26 +2,27 @@ syntax = "proto3";
 package pessoa;
 
 import "google/protobuf/timestamp.proto";
+import public "endereco-service.proto";
 
-
-//Objeto Endereço
-message Endereco {
-
-    int64 id =  1;
-
-    int64 cep =  2;
-
-    string logradouro = 3;
-
-    string complemento = 4;
-
-    string bairro = 5;
-
-    string cidade = 6;
-
-    string uf = 7;
-
-}
+//
+////Objeto Endereço
+//message Endereco {
+//
+//    int64 id =  1;
+//
+//    int64 cep =  2;
+//
+//    string logradouro = 3;
+//
+//    string complemento = 4;
+//
+//    string bairro = 5;
+//
+//    string cidade = 6;
+//
+//    string uf = 7;
+//
+//}
 
 
 // Objeto Telefone 
@@ -90,29 +91,25 @@ message CrearPessoaResponse{
 }
 
 
+//// Requisito para criar uma nova pessoa
+//message CriarEnderecoRequest{
+//    string api = 1;
+//    Endereco endereco = 2;
+//}
+//
+//// Resposta com ID da pessoa Criada
+//message CriarEnderecoResponse{
+//    string api = 1;
+//    int64 id = 2;
+//}
+//
+
+
 // serviço de pessoa RPC
 service PessoaService {
     // Cria uma nova pessoa
     rpc criar (CrearPessoaRequest) returns (CrearPessoaResponse);
-}
-
-
-
-// Requisito para criar uma nova pessoa
-message CriarEnderecoRequest{
-    string api = 1;
-    Endereco endereco = 2;
-}
-
-// Resposta com ID da pessoa Criada
-message CriarEnderecoResponse{
-    string api = 1;
-    int64 id = 2;
-}
-
-
-// serviço de endereco RPC
-service EnderecoService {
-    // Cria uma nova pessoa
-    rpc criar (CriarEnderecoRequest) returns (CriarEnderecoResponse);
+//
+//    // criar endereco
+//    rpc criarEndereco (CriarEnderecoRequest) returns (CriarEnderecoResponse);
 }
