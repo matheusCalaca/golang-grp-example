@@ -100,6 +100,13 @@ func clientePessoa(conn *grpc.ClientConn, reminder *timestamp.Timestamp, err err
 					Rg:  5749750,
 				},
 			},
+			Telefone: []*pessoa.Telefone{
+				{
+					Dd:     "62",
+					Numero: "999627272",
+					Tipo:   pessoa.TelefoneTipo_CELULAR,
+				},
+			},
 			Reminder: reminder,
 		},
 	}

@@ -4,16 +4,16 @@ package pessoa;
 import "google/protobuf/timestamp.proto";
 import public "endereco-service.proto";
 
+enum TelefoneTipo {
+    CELULAR = 0;
+    CASA = 1;
+    TRABALHO = 2;
+}
+
 // Objeto Telefone
 message Telefone {
 
     int64 id = 1;
-
-    enum TelefoneTipo {
-        CELULAR = 0;
-        CASA = 1;
-        TRABALHO = 2;
-    }
 
     string dd = 2;
 
@@ -21,7 +21,6 @@ message Telefone {
 
     TelefoneTipo tipo = 4;
 
-    google.protobuf.Timestamp reminder = 5;
 }
 
 // objeto identificador
@@ -76,10 +75,24 @@ message CriarIdentificadorRequest {
     string api = 2;
 }
 
+//CriarTelefoneResponse cria um telefone para a pessoa response
+message CriarTelefoneResponse {
+    string api = 1;
+    int64 id = 2;
+}
+
+//CriarTelefoneRequest cria um telefone para a pessoa request
+message CriarTelefoneRequest {
+    Telefone telefone = 1;
+    string api = 2;
+}
+
 // serviço de pessoa RPC
 service PessoaService {
     // Cria uma nova pessoa
     rpc criar (CriarPessoaRequest) returns (CriarPessoaResponse);
-
+    //cria o identificador da pessoa
     rpc CriarIdentificador (CriarIdentificadorRequest) returns (CriarIdentificadorResponse);
+    // cria o telefone da pessoa
+    rpc CriarTelefone (CriarTelefoneRequest) returns (CriarTelefoneResponse);
 }

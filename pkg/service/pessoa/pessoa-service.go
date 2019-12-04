@@ -22,6 +22,33 @@ type pessoaServiceService struct {
 	db *sql.DB
 }
 
+/**
+* CriarTelefone inserindo telefone no banco de dados para pesso
+ */
+func (service *pessoaServiceService) CriarTelefone(ctx context.Context, req *pessoa.CriarTelefoneRequest) (*pessoa.CriarTelefoneResponse, error) {
+	conn, err := service.connect(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "Erro ao conectar ao banco de dados -> "+err.Error())
+	}
+
+	telefone := req.Telefone
+	result, err := conn.ExecContext(ctx, "insert into telefone (TIPO, DD, NUMERO) values (?,?,?)", telefone.Tipo, telefone.Dd, telefone.Numero)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "Erro ao inserir o Telefone -> "+err.Error())
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "Erro ao buscar o ultimo ID inserido no Telefone -> "+err.Error())
+	}
+
+	response := &pessoa.CriarTelefoneResponse{
+		Api: apiVersion,
+		Id:  id,
+	}
+	return response, nil
+}
+
 //// NewPessoaServiceServer Cria o servidor para pessoa
 func NewPessoaServiceServer(db *sql.DB) pessoa.PessoaServiceServer {
 	return &pessoaServiceService{db: db}
@@ -83,8 +110,11 @@ func (service *pessoaServiceService) Criar(ctx context.Context, req *pessoa.Cria
 	if err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
-
 	log.Printf("Identificador criado <%+v>\n\n", identificadorResponse.Cpf)
+
+	telefoneResponse, err := clienteTelefone(connGrpc, ctx, req.Pessoa.Telefone[0])
+
+	log.Printf("Telefone criado <%+v>\n\n", telefoneResponse.Id)
 
 	// set a data atual ao redmier
 	reminder, err := ptypes.Timestamp(req.Pessoa.Reminder)
@@ -98,8 +128,8 @@ func (service *pessoaServiceService) Criar(ctx context.Context, req *pessoa.Cria
 	}
 
 	// insert no bd os dados da pessoa
-	res, err := con.ExecContext(ctx, "INSERT INTO pessoa (`NOME`, `DATA_NASCIMENTO`, `EMAIL`, `ENDERECO_ID`,`IEDNTIFICADOR_ID`,`REMIDER`)	VALUES	(?,	?,?,?, ?, ? )",
-		req.Pessoa.Nome, dtNascimento, req.Pessoa.Email, enderecoResponse.Id, identificadorResponse.Cpf, reminder)
+	res, err := con.ExecContext(ctx, "INSERT INTO pessoa (`NOME`, `DATA_NASCIMENTO`, `EMAIL`, `ENDERECO_ID`,`IEDNTIFICADOR_ID`,`TELEFONE_ID`,`REMIDER`)	VALUES	(?, ?, ?,?,?, ?, ? )",
+		req.Pessoa.Nome, dtNascimento, req.Pessoa.Email, enderecoResponse.Id, identificadorResponse.Cpf, telefoneResponse.Id, reminder)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "Falha ao inserir pessoa no banco de dados-> "+err.Error())
 	}
@@ -157,6 +187,7 @@ func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context, ende
 	return responseEndereco, nil
 }
 
+//clientIdentificador cliente para inserir um identificado na pessoa
 func clientIdentificador(grpCon *grpc.ClientConn, ctx context.Context, identificador *pessoa.Identificador) (*pessoa.CriarIdentificadorResponse, error) {
 	clientIdentificador := pessoa.NewPessoaServiceClient(grpCon)
 
@@ -167,6 +198,24 @@ func clientIdentificador(grpCon *grpc.ClientConn, ctx context.Context, identific
 		return nil, status.Error(codes.Unknown, "Erro ao criar o identificador -> "+err.Error())
 	}
 	log.Printf("Identificador criado <%+v>\n\n", request)
+
+	return response, nil
+}
+
+// clienteTelefone cliente para inserir um telefone na tabela
+func clienteTelefone(grpConn *grpc.ClientConn, ctx context.Context, telefone *pessoa.Telefone) (*pessoa.CriarTelefoneResponse, error) {
+
+	client := pessoa.NewPessoaServiceClient(grpConn)
+
+	request := pessoa.CriarTelefoneRequest{
+		Telefone: telefone,
+		Api:      apiVersion,
+	}
+
+	response, err := client.CriarTelefone(ctx, &request)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "Erro ao criar o Telefone -> "+err.Error())
+	}
 
 	return response, nil
 }
