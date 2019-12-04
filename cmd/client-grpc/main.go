@@ -39,31 +39,32 @@ func main() {
 	//Pessoa cliente
 	clientePessoa(conn, reminder, err, ctx)
 	//Endereco cliente
-	clienteEndereco(conn, err, ctx)
+	//clienteEndereco(conn, err, ctx)
 
 }
 
-func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context) {
-	// Endereço
-	clientEndereco := pessoa.NewEnderecoServiceClient(conn)
-	reqEndereco := pessoa.CriarEnderecoRequest{
-		Api: apiVersion,
-		Endereco: &pessoa.Endereco{
-			Cep:         74413140,
-			Logradouro:  "Rua marechal lino de morais",
-			Complemento: "qd 145",
-			Bairro:      "cidade jardim",
-			Cidade:      "Goiania",
-			Uf:          "GO",
-		},
-	}
-	fmt.Println(reqEndereco)
-	responseEndereco, err := clientEndereco.CriarEndereco(ctx, &reqEndereco)
-	if err != nil {
-		log.Fatalf("falha ao criar enderreço %v", err)
-	}
-	log.Printf("Endereço criado <%+v>\n\n", responseEndereco)
-}
+//
+//func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context) {
+//	// Endereço
+//	clientEndereco := pessoa.NewEnderecoServiceClient(conn)
+//	reqEndereco := pessoa.CriarEnderecoRequest{
+//		Api: apiVersion,
+//		Endereco: &pessoa.Endereco{
+//			Cep:         74413140,
+//			Logradouro:  "Rua marechal lino de morais",
+//			Complemento: "qd 145",
+//			Bairro:      "cidade jardim",
+//			Cidade:      "Goiania",
+//			Uf:          "GO",
+//		},
+//	}
+//	fmt.Println(reqEndereco)
+//	responseEndereco, err := clientEndereco.CriarEndereco(ctx, &reqEndereco)
+//	if err != nil {
+//		log.Fatalf("falha ao criar enderreço %v", err)
+//	}
+//	log.Printf("Endereço criado <%+v>\n\n", responseEndereco)
+//}
 
 func clientePessoa(conn *grpc.ClientConn, reminder *timestamp.Timestamp, err error, ctx context.Context) {
 
@@ -75,14 +76,25 @@ func clientePessoa(conn *grpc.ClientConn, reminder *timestamp.Timestamp, err err
 	if err != nil {
 		panic(err)
 	}
+
 	// criar uma pessoa
-	req1 := pessoa.CriarPessoaRequest{
+	var req1 = pessoa.CriarPessoaRequest{
 		Api: apiVersion,
 		Pessoa: &pessoa.Pessoa{
 			Nome:         "Matheus Calaça 2",
 			DtNascimento: dataNascimento,
 			Email:        "matheusfcalaca@gmail.com",
-			Reminder:     reminder,
+			Endereco: []*pessoa.Endereco{
+				{
+					Cep:         74413140,
+					Logradouro:  "Rua marechal lino de morais",
+					Complemento: "qd 145",
+					Bairro:      "cidade jardim",
+					Cidade:      "Goiania",
+					Uf:          "GO",
+				},
+			},
+			Reminder: reminder,
 		},
 	}
 	fmt.Println(req1)
