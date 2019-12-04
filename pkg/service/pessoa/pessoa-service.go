@@ -28,7 +28,7 @@ func NewPessoaServiceServer(db *sql.DB) pessoa.PessoaServiceServer {
 }
 
 // checkAPI verifica se a versão da api do cliente e suportada pelo o servidor
-func (s *pessoaServiceService) checkAPI(api string) error {
+func (service *pessoaServiceService) checkAPI(api string) error {
 
 	if len(api) > 0 {
 		if apiVersion != api {
@@ -40,8 +40,8 @@ func (s *pessoaServiceService) checkAPI(api string) error {
 }
 
 // connect retorna o pool de conexao com o database
-func (s *pessoaServiceService) connect(ctx context.Context) (*sql.Conn, error) {
-	c, err := s.db.Conn(ctx)
+func (service *pessoaServiceService) connect(ctx context.Context) (*sql.Conn, error) {
+	c, err := service.db.Conn(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "failed to connect to database-> "+err.Error())
 	}
@@ -49,14 +49,14 @@ func (s *pessoaServiceService) connect(ctx context.Context) (*sql.Conn, error) {
 }
 
 // Create nova pessoa
-func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CriarPessoaRequest) (*pessoa.CriarPessoaResponse, error) {
+func (service *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CriarPessoaRequest) (*pessoa.CriarPessoaResponse, error) {
 	// check verifica se a versão da api do cliente e suportada pelo o servidor
-	if err := s.checkAPI(req.Api); err != nil {
+	if err := service.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
 
 	// obtem a conexao com o BD
-	con, err := s.connect(ctx)
+	con, err := service.connect(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -73,10 +73,18 @@ func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CriarPesso
 	pessoa.NewEnderecoServiceClient(connGrpc)
 
 	//Endereco cliente
-	enderecoResponse, err := clienteEndereco(connGrpc, err, ctx)
+	enderecoResponse, err := clienteEndereco(connGrpc, err, ctx, req.Pessoa.Endereco[0])
 	if err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
+
+	//Identidficador cliente
+	identificadorResponse, err := clientIdentificador(connGrpc, ctx, req.Pessoa.Identificador[0])
+	if err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
+
+	log.Printf("Identificador criado <%+v>\n\n", identificadorResponse.Cpf)
 
 	// set a data atual ao redmier
 	reminder, err := ptypes.Timestamp(req.Pessoa.Reminder)
@@ -90,8 +98,8 @@ func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CriarPesso
 	}
 
 	// insert no bd os dados da pessoa
-	res, err := con.ExecContext(ctx, "INSERT INTO pessoa (`NOME`, `DATA_NASCIMENTO`, `EMAIL`, `ENDERECO_ID`,`REMIDER`)	VALUES	(?,	?,?,  ?, ? )",
-		req.Pessoa.Nome, dtNascimento, req.Pessoa.Email, enderecoResponse.Id, reminder)
+	res, err := con.ExecContext(ctx, "INSERT INTO pessoa (`NOME`, `DATA_NASCIMENTO`, `EMAIL`, `ENDERECO_ID`,`IEDNTIFICADOR_ID`,`REMIDER`)	VALUES	(?,	?,?,?, ?, ? )",
+		req.Pessoa.Nome, dtNascimento, req.Pessoa.Email, enderecoResponse.Id, identificadorResponse.Cpf, reminder)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "Falha ao inserir pessoa no banco de dados-> "+err.Error())
 	}
@@ -108,19 +116,35 @@ func (s *pessoaServiceService) Criar(ctx context.Context, req *pessoa.CriarPesso
 	}, nil
 }
 
-func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context) (*pessoa.CriarEnderecoResponse, error) {
+func (service *pessoaServiceService) CriarIdentificador(ctx context.Context, req *pessoa.CriarIdentificadorRequest) (*pessoa.CriarIdentificadorResponse, error) {
+	identificador := req.Identificador
+
+	// obtem a conexao com o BD
+	con, err := service.connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer con.Close()
+
+	// inclusão no banco do identificador
+	_, err = con.ExecContext(ctx, "INSERT INTO identificador (`CPF`, `RG`) values (?,?)", identificador.Cpf, identificador.Rg)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "Erro ao inserir Identificador da pessoa no banco de dados -> "+err.Error())
+	}
+
+	response := &pessoa.CriarIdentificadorResponse{Cpf: req.Identificador.Cpf, Api: apiVersion}
+
+	return response, nil
+}
+
+// ----------------------- CLIENTS --------------------------------------------------
+
+func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context, endereco *pessoa.Endereco) (*pessoa.CriarEnderecoResponse, error) {
 	// Endereço
 	clientEndereco := pessoa.NewEnderecoServiceClient(conn)
 	reqEndereco := pessoa.CriarEnderecoRequest{
-		Api: apiVersion,
-		Endereco: &pessoa.Endereco{
-			Cep:         74413140,
-			Logradouro:  "Rua marechal lino de morais",
-			Complemento: "qd 145",
-			Bairro:      "cidade jardim",
-			Cidade:      "Goiania",
-			Uf:          "GO",
-		},
+		Api:      apiVersion,
+		Endereco: endereco,
 	}
 	fmt.Println(reqEndereco)
 	responseEndereco, err := clientEndereco.CriarEndereco(ctx, &reqEndereco)
@@ -131,4 +155,18 @@ func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context) (*pe
 	log.Printf("Endereço criado <%+v>\n\n", responseEndereco)
 
 	return responseEndereco, nil
+}
+
+func clientIdentificador(grpCon *grpc.ClientConn, ctx context.Context, identificador *pessoa.Identificador) (*pessoa.CriarIdentificadorResponse, error) {
+	clientIdentificador := pessoa.NewPessoaServiceClient(grpCon)
+
+	request := pessoa.CriarIdentificadorRequest{Identificador: identificador, Api: apiVersion}
+
+	response, err := clientIdentificador.CriarIdentificador(ctx, &request)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "Erro ao criar o identificador -> "+err.Error())
+	}
+	log.Printf("Identificador criado <%+v>\n\n", request)
+
+	return response, nil
 }

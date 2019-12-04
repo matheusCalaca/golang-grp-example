@@ -94,6 +94,12 @@ func clientePessoa(conn *grpc.ClientConn, reminder *timestamp.Timestamp, err err
 					Uf:          "GO",
 				},
 			},
+			Identificador: []*pessoa.Identificador{
+				{
+					Cpf: 75355795153,
+					Rg:  5749750,
+				},
+			},
 			Reminder: reminder,
 		},
 	}

@@ -4,17 +4,16 @@ package pessoa;
 import "google/protobuf/timestamp.proto";
 import public "endereco-service.proto";
 
-
-// Objeto Telefone 
+// Objeto Telefone
 message Telefone {
-    
-    int64 id =  1;
-    
+
+    int64 id = 1;
+
     enum TelefoneTipo {
         CELULAR = 0;
         CASA = 1;
         TRABALHO = 2;
-      }
+    }
 
     string dd = 2;
 
@@ -30,11 +29,7 @@ message Identificador {
     int64 cpf = 1;
 
     int64 rg = 2;
-
-    google.protobuf.Timestamp reminder = 4;
 }
-
-
 
 // Objeto Pessoa
 message Pessoa {
@@ -44,34 +39,47 @@ message Pessoa {
     string nome = 2;
 
     google.protobuf.Timestamp dtNascimento = 3;
-    
-    repeated Identificador identificador =  4;
+
+    repeated Identificador identificador = 4;
 
     string email = 5;
 
     repeated Telefone telefone = 6;
-    
+
     repeated Endereco endereco = 7;
 
     google.protobuf.Timestamp reminder = 8;
 
 }
 
-
 // Requisicao para criar uma nova pessoa
-message CriarPessoaRequest{
+message CriarPessoaRequest {
     string api = 1;
     Pessoa pessoa = 2;
 }
 
 // Resposta com ID da pessoa Criada
-message CriarPessoaResponse{
+message CriarPessoaResponse {
     string api = 1;
     int64 id = 2;
+}
+
+//CriarIdentificadorResponse cria um identificador para a pessoa response
+message CriarIdentificadorResponse {
+    string api = 1;
+    int64 cpf = 2;
+}
+
+//CriarIdentificadorRequest cria um identificador para a pessoa request
+message CriarIdentificadorRequest {
+    Identificador identificador = 1;
+    string api = 2;
 }
 
 // serviço de pessoa RPC
 service PessoaService {
     // Cria uma nova pessoa
     rpc criar (CriarPessoaRequest) returns (CriarPessoaResponse);
+
+    rpc CriarIdentificador (CriarIdentificadorRequest) returns (CriarIdentificadorResponse);
 }
