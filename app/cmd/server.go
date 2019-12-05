@@ -8,8 +8,8 @@ import (
 
 	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/matheusCalaca/golanggrpexample/app/cmd/grpc"
 	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/service/pessoa"
-	"github.com/matheusCalaca/golanggrpexample/pkg/protocol/grpc"
 )
 
 // Config configuração para o servidor

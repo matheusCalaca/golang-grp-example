@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/matheusCalaca/golanggrpexample/pkg/cmd"
+	"github.com/matheusCalaca/golanggrpexample/app/cmd"
 	"os"
 )
 

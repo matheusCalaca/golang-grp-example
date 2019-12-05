@@ -7,7 +7,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	pessoa "github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
+	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/api/pessoa"
 	"reflect"
 	"time"
 

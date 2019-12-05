@@ -2,7 +2,8 @@ package pessoa
 
 import (
 	"database/sql"
-	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
+	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/api/pessoa"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

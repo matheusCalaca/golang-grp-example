@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/golang/protobuf/ptypes"
-	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
+	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/api/pessoa"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

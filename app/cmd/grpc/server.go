@@ -2,12 +2,12 @@ package grpc
 
 import (
 	"context"
+	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/api/pessoa"
 	"log"
 	"net"
 	"os"
 	"os/signal"
 
-	"github.com/matheusCalaca/golanggrpexample/pkg/api/pessoa"
 	"google.golang.org/grpc"
 )
 
