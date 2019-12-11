@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/golang/protobuf/ptypes"
 	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/api/pessoa"
 	"github.com/matheusCalaca/golanggrpexample/app/repository"
 	"google.golang.org/grpc"
@@ -33,20 +32,11 @@ func (service *pessoaServiceService) CriarTelefone(ctx context.Context, req *pes
 	}
 
 	telefone := req.Telefone
-	result, err := conn.ExecContext(ctx, "insert into telefone (TIPO, DD, NUMERO) values (?,?,?)", telefone.Tipo, telefone.Dd, telefone.Numero)
+	response, err := repository.CriarTelefoneRepository(conn, telefone, ctx)
 	if err != nil {
-		return nil, status.Error(codes.Unknown, "Erro ao inserir o Telefone -> "+err.Error())
+		return nil, status.Error(codes.Unknown, "Erro ao Inserir Telefone ao banco de dados -> "+err.Error())
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, status.Error(codes.Unknown, "Erro ao buscar o ultimo ID inserido no Telefone -> "+err.Error())
-	}
-
-	response := &pessoa.CriarTelefoneResponse{
-		Api: apiVersion,
-		Id:  id,
-	}
 	return response, nil
 }
 
@@ -83,6 +73,7 @@ func (service *pessoaServiceService) Criar(ctx context.Context, req *pessoa.Cria
 		return nil, err
 	}
 
+	reqPessoa := req.Pessoa
 	// obtem a conexao com o BD
 	con, err := service.connect(ctx)
 	if err != nil {
@@ -101,50 +92,23 @@ func (service *pessoaServiceService) Criar(ctx context.Context, req *pessoa.Cria
 	pessoa.NewEnderecoServiceClient(connGrpc)
 
 	//Endereco cliente
-	enderecoResponse, err := clienteEndereco(connGrpc, err, ctx, req.Pessoa.Endereco[0])
+	enderecoResponse, err := clienteEndereco(connGrpc, err, ctx, reqPessoa.Endereco[0])
 	if err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
 	//Identidficador cliente
-	identificadorResponse, err := clientIdentificador(connGrpc, ctx, req.Pessoa.Identificador[0])
+	identificadorResponse, err := clientIdentificador(connGrpc, ctx, reqPessoa.Identificador[0])
 	if err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 	log.Printf("Identificador criado <%+v>\n\n", identificadorResponse.Cpf)
 
-	telefoneResponse, err := clienteTelefone(connGrpc, ctx, req.Pessoa.Telefone[0])
+	telefoneResponse, err := clienteTelefone(connGrpc, ctx, reqPessoa.Telefone[0])
 
 	log.Printf("Telefone criado <%+v>\n\n", telefoneResponse.Id)
 
-	// set a data atual ao redmier
-	reminder, err := ptypes.Timestamp(req.Pessoa.Reminder)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "reminder campo com o formato invalido -> "+err.Error())
-	}
-
-	dtNascimento, err := ptypes.Timestamp(req.Pessoa.DtNascimento)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "Data de Nascimento Formato invalido -> "+err.Error())
-	}
-
-	// insert no bd os dados da pessoa
-	res, err := con.ExecContext(ctx, "INSERT INTO pessoa (`NOME`, `DATA_NASCIMENTO`, `EMAIL`, `ENDERECO_ID`,`IEDNTIFICADOR_ID`,`TELEFONE_ID`,`REMIDER`)	VALUES	(?, ?, ?,?,?, ?, ? )",
-		req.Pessoa.Nome, dtNascimento, req.Pessoa.Email, enderecoResponse.Id, identificadorResponse.Cpf, telefoneResponse.Id, reminder)
-	if err != nil {
-		return nil, status.Error(codes.Unknown, "Falha ao inserir pessoa no banco de dados-> "+err.Error())
-	}
-
-	// obtem o ultimo ai inserido
-	id, err := res.LastInsertId()
-	if err != nil {
-		return nil, status.Error(codes.Unknown, "falha ao trazer o ultimo id-> "+err.Error())
-	}
-
-	return &pessoa.CriarPessoaResponse{
-		Api: apiVersion,
-		Id:  id,
-	}, nil
+	return repository.CriarPessoaRepository(con, ctx, reqPessoa, enderecoResponse, identificadorResponse, telefoneResponse)
 }
 
 func (service *pessoaServiceService) CriarIdentificador(ctx context.Context, req *pessoa.CriarIdentificadorRequest) (*pessoa.CriarIdentificadorResponse, error) {
@@ -180,7 +144,6 @@ func clienteEndereco(conn *grpc.ClientConn, err error, ctx context.Context, ende
 		log.Fatalf("falha ao criar enderreço %v", err)
 		return nil, status.Error(codes.Unknown, "Erro ao criar Endereço ->  "+err.Error())
 	}
-	log.Printf("Endereço criado <%+v>\n\n", responseEndereco)
 
 	return responseEndereco, nil
 }
