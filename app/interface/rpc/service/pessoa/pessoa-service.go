@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/matheusCalaca/golanggrpexample/app/interface/rpc/api/pessoa"
+	"github.com/matheusCalaca/golanggrpexample/app/repository"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -155,14 +156,11 @@ func (service *pessoaServiceService) CriarIdentificador(ctx context.Context, req
 		return nil, err
 	}
 	defer con.Close()
-
 	// inclusão no banco do identificador
-	_, err = con.ExecContext(ctx, "INSERT INTO identificador (`CPF`, `RG`) values (?,?)", identificador.Cpf, identificador.Rg)
+	response, err := repository.CriarIdentificadorRepository(con, identificador, ctx)
 	if err != nil {
-		return nil, status.Error(codes.Unknown, "Erro ao inserir Identificador da pessoa no banco de dados -> "+err.Error())
+		return nil, err
 	}
-
-	response := &pessoa.CriarIdentificadorResponse{Cpf: req.Identificador.Cpf, Api: apiVersion}
 
 	return response, nil
 }

@@ -21,7 +21,6 @@ func RunServer(ctx context.Context, port string, PessoaAPI pessoa.PessoaServiceS
 	// register service
 	server := grpc.NewServer()
 	pessoa.RegisterPessoaServiceServer(server, PessoaAPI)
-
 	pessoa.RegisterEnderecoServiceServer(server, EnderecoApi)
 
 	// graceful shutdown
