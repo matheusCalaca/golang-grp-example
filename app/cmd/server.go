@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"github.com/matheusCalaca/golanggrpexample/app/cmd/rest"
 
 	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
@@ -17,6 +18,9 @@ type Config struct {
 
 	// GRPCPort porta que o grpc vai ficar escutndo
 	GRPCPort string
+
+	//configuração da porta HTTP
+	HTTPPort string
 
 	// DB Datastore parameters
 	// DatastoreDBHost host do BD
@@ -37,6 +41,7 @@ func RunServer() error {
 	// todo: trocar por properties
 	var cfg Config
 	flag.StringVar(&cfg.GRPCPort, "grpc-port", "", "gRPC port to start")
+	flag.StringVar(&cfg.HTTPPort, "http-port", "", "HTTP port to start")
 	flag.StringVar(&cfg.DatastoreDBHost, "db-host", "", "Database host")
 	flag.StringVar(&cfg.DatastoreDBUser, "db-user", "", "Database user")
 	flag.StringVar(&cfg.DatastoreDBPassword, "db-password", "", "Database password")
@@ -45,6 +50,9 @@ func RunServer() error {
 
 	if len(cfg.GRPCPort) == 0 {
 		return fmt.Errorf("Porta invalisa para o gRPC: '%s'", cfg.GRPCPort)
+	}
+	if len(cfg.HTTPPort) == 0 {
+		return fmt.Errorf("Porta invalida para o HTTP: '%s'", cfg.HTTPPort)
 	}
 
 	// Especifica o parametros da data para o MYSQL
@@ -64,6 +72,10 @@ func RunServer() error {
 
 	PessoaAPI := pessoa.NewPessoaServiceServer(db)
 	EnderecoAPI := pessoa.NewEnderecoServiceServer(db)
+
+	go func() {
+		rest.RunServer(ctx, cfg.GRPCPort, cfg.HTTPPort)
+	}()
 
 	return grpc.RunServer(ctx, cfg.GRPCPort, PessoaAPI, EnderecoAPI)
 }

@@ -2,6 +2,7 @@ syntax = "proto3";
 package pessoa;
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 import public "endereco-service.proto";
 
 enum TelefoneTipo {
@@ -92,7 +93,12 @@ service PessoaService {
     // Cria uma nova pessoa
     rpc criar (CriarPessoaRequest) returns (CriarPessoaResponse);
     //cria o identificador da pessoa
-    rpc CriarIdentificador (CriarIdentificadorRequest) returns (CriarIdentificadorResponse);
+    rpc CriarIdentificador (CriarIdentificadorRequest) returns (CriarIdentificadorResponse){
+        option(google.api.http) ={
+        post: "/pessoa/identificador"
+        body: "*"
+        };
+    }
     // cria o telefone da pessoa
     rpc CriarTelefone (CriarTelefoneRequest) returns (CriarTelefoneResponse);
 }

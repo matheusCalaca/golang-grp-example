@@ -1,0 +1,208 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "pessoa-service.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/pessoa/identificador": {
+      "post": {
+        "summary": "cria o identificador da pessoa",
+        "operationId": "CriarIdentificador",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pessoaCriarIdentificadorResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pessoaCriarIdentificadorRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PessoaService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pessoaCriarIdentificadorRequest": {
+      "type": "object",
+      "properties": {
+        "identificador": {
+          "$ref": "#/definitions/pessoaIdentificador"
+        },
+        "api": {
+          "type": "string"
+        }
+      },
+      "title": "CriarIdentificadorRequest cria um identificador para a pessoa request"
+    },
+    "pessoaCriarIdentificadorResponse": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "string"
+        },
+        "cpf": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "CriarIdentificadorResponse cria um identificador para a pessoa response"
+    },
+    "pessoaCriarPessoaResponse": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Resposta com ID da pessoa Criada"
+    },
+    "pessoaCriarTelefoneResponse": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "CriarTelefoneResponse cria um telefone para a pessoa response"
+    },
+    "pessoaEndereco": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "cep": {
+          "type": "string",
+          "format": "int64"
+        },
+        "logradouro": {
+          "type": "string"
+        },
+        "complemento": {
+          "type": "string"
+        },
+        "bairro": {
+          "type": "string"
+        },
+        "cidade": {
+          "type": "string"
+        },
+        "uf": {
+          "type": "string"
+        }
+      },
+      "title": "Objeto Endereço"
+    },
+    "pessoaIdentificador": {
+      "type": "object",
+      "properties": {
+        "cpf": {
+          "type": "string",
+          "format": "int64"
+        },
+        "rg": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "objeto identificador"
+    },
+    "pessoaPessoa": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "nome": {
+          "type": "string"
+        },
+        "dtNascimento": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "identificador": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pessoaIdentificador"
+          }
+        },
+        "email": {
+          "type": "string"
+        },
+        "telefone": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pessoaTelefone"
+          }
+        },
+        "endereco": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pessoaEndereco"
+          }
+        },
+        "reminder": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "Objeto Pessoa"
+    },
+    "pessoaTelefone": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "dd": {
+          "type": "string"
+        },
+        "numero": {
+          "type": "string"
+        },
+        "tipo": {
+          "$ref": "#/definitions/pessoaTelefoneTipo"
+        }
+      },
+      "title": "Objeto Telefone"
+    },
+    "pessoaTelefoneTipo": {
+      "type": "string",
+      "enum": [
+        "CELULAR",
+        "CASA",
+        "TRABALHO"
+      ],
+      "default": "CELULAR"
+    }
+  }
+}
